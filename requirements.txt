@@ -31,6 +31,7 @@ pydantic_core==2.33.2
 pyparsing==3.2.3
 python-dotenv==1.1.0
 python-jose==3.4.0
+python-multipart==0.0.20
 requests==2.32.3
 rsa==4.9.1
 six==1.17.0
