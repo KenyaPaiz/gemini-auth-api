@@ -42,6 +42,8 @@ class AuthService:
         token = credentials.credentials
         try:
             payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
-            return payload
+            #return payload
+            email = payload.get("sub")
+            return {"email": email}
         except JWTError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, content="Invalid token")
