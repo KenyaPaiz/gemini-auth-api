@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from services.users import UserService, UserModel
-from services.auth import AuthService, Depends
+from services.auth import AuthService, Depends, OAuth2PasswordRequestForm
 from models.authModel import AuthModel
 from gemeni import generate_text, get_chat ,PromptModel
 
@@ -13,8 +13,8 @@ def create_user(user: UserModel):
     return UserService.save(user)
 
 @api_router.post("/login")
-def auth_user(credentials: AuthModel):
-    return AuthService.login(credentials.email, credentials.password)
+def auth_user(form_data: OAuth2PasswordRequestForm = Depends()):
+    return AuthService.login(form_data)
 
 @api_router.post("/kodigo-query", dependencies=[Depends(AuthService.verify_token)])
 async def generate_prompt_kodigo(prompt: PromptModel, user: dict = Depends(AuthService.verify_token)):

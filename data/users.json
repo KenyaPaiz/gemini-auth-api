@@ -8,5 +8,10 @@
         "fullname": "Juanito Perez",
         "email": "juanito20@example.test",
         "password": "$2b$12$4rrQFsh4BE.vahZjIO3vJe1mEndPccI14LyaoOcdCPtSLZuGzUx.a"
+    },
+    {
+        "fullname": "Fernando Aguilar",
+        "email": "fernando.aguilar@example.test",
+        "password": "$2b$12$FIcBUT3zZuS43ZF3mOOx7O7JVuWlgjUsetMSJIk8EkGfCBHcgcaOK"
     }
 ]

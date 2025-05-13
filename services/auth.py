@@ -1,18 +1,21 @@
 import os, json, bcrypt
 from fastapi.responses import JSONResponse
 from fastapi import status, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, HTTPBearer, HTTPAuthorizationCredentials
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from dotenv import load_dotenv
 
 load_dotenv()
-#oauth2 = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
-security = HTTPBearer()
+oauth2 = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
+#security = HTTPBearer()
 
 class AuthService:
     # function to authenticate a user and return a JWT token
-    def login(email:str, password:str):
+    def login(formData: OAuth2PasswordRequestForm):
+        email = formData.username
+        password = formData.password
+        
         file_path = os.path.join("data", "users.json")
 
         # read the file
@@ -38,12 +41,12 @@ class AuthService:
         return JSONResponse(status_code=status.HTTP_200_OK, content={"access_token": token, "token_type": "bearer"})
     
     # function to verify the JWT token
-    def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-        token = credentials.credentials
+    def verify_token(token: str = Depends(oauth2)):
         try:
             payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
-            #return payload
-            email = payload.get("sub")
+            email: str = payload.get("sub")
+            if email is None:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, content="Invalid token")
             return {"email": email}
         except JWTError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, content="Invalid token")
